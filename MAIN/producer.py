@@ -14,9 +14,10 @@ reply_key = "dns_reply"
 def parse_valid_args(args):
     if len(args) != 2:
         print "Usage: python producer.py domain.name "
-        sys.exit (1)
+        sys.exit(1)
 
     return args[1]
+
 
 # callback function on receiving reply messages
 def on_message(channel, method, properties, body):
@@ -32,6 +33,7 @@ def listen():
     channel.queue_bind(exchange=exchange_name, queue=reply_queue, routing_key=reply_key)
     channel.basic_consume(consumer_callback=on_message, queue=reply_queue, no_ack=True)
     channel.start_consuming()
+
 
 try:
     # validate args
