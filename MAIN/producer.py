@@ -1,16 +1,22 @@
 import pika
 import thread
 import time
+import sys
 
 server = "localhost"
 exchange_name = "dns_exchange"
 reply_queue = "dns_reply_queue"
 request_key = "dns_request"
 reply_key = "dns_reply"
-message = "google.co.uk"
 
 
+# Parse and validate args
+def parse_valid_args(args):
+    if len(args) != 2:
+        print "Usage: python producer.py domain.name "
+        sys.exit (1)
 
+    return args[1]
 
 # callback function on receiving reply messages
 def on_message(channel, method, properties, body):
@@ -28,6 +34,9 @@ def listen():
     channel.start_consuming()
 
 try:
+    # validate args
+    message = parse_valid_args(sys.argv)
+
     # connect
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=server))
     channel = connection.channel()
